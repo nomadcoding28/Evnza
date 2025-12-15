@@ -1,0 +1,49 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # Auto-detects services from Eureka
+          lower-case-service-id: true
+      routes:
+        - id: venue-service
+          uri: lb://VENUE-SERVICE  # "lb" means Load Balancer
+          predicates:
+            - Path=/venues/**
+
+        - id: event-service
+          uri: lb://EVENT-SERVICE
+          predicates:
+            - Path=/events/**
+
+        - id: booking-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/bookings/**
+
+        - id: payment-service
+          uri: lb://PAYMENT-SERVICE
+          predicates:
+            - Path=/payments/**
+
+      # CORS Configuration (Vital for Frontend!)
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "*"   # Allow all frontends (React, Postman)
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+            allowedHeaders: "*"
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
