@@ -5,21 +5,24 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import BookingModal from "./BookingModal";
 
-// --- HELPER: Pick image based on category name ---
 const getCategoryImage = (category: string) => {
+  // Debugging: Check the Console (F12) to see what category is coming in
+  console.log("Category:", category); 
+  
   const normalized = category?.toLowerCase() || "";
   
   if (normalized.includes("music") || normalized.includes("concert") || normalized.includes("festival")) {
-  // NEW BRIGHTER IMAGE
-    return "https://images.unsplash.com/photo-1459749411177-287ce3288789?w=800&q=80"; 
+    // Try this new, very stable URL
+    return "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800&q=80";
   }
   if (normalized.includes("tech") || normalized.includes("education") || normalized.includes("conference")) {
-    return "https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=800&q=80"; // Tech
+    return "https://images.unsplash.com/photo-1544531586-fde5298cdd40?w=800&q=80"; 
   }
   if (normalized.includes("sport") || normalized.includes("game") || normalized.includes("match")) {
-    return "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80"; // Stadium
+    return "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=800&q=80"; 
   }
-  // Fallback
+  
+  // Default Fallback
   return "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80";
 };
 
@@ -60,6 +63,9 @@ const EventCard = ({ event, onBookingSuccess }: EventCardProps) => {
             src={getCategoryImage(event.category)}
             alt={event.eventName}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            onError={(e) => {
+            e.currentTarget.src = "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=800&q=80"; // Fallback image
+            }}
           />
           
           {/* Gradient Overlay */}

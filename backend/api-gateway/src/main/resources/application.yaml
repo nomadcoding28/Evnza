@@ -47,3 +47,28 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+# --- Add this to EXPOSE the link ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  info:
+    env:
+      enabled: true
+# Append this to the bottom of your existing application.yml
+info:
+  app:
+    name: ${spring.application.name}
+    description: "Central entry point for all services"
+    version: "1.0.0"
+  architecture:
+    frontend: "http://localhost:5173"
+    backend_gateway: "http://localhost:8080"
+
+    connected_services:
+      venue-service: "Active (LB: VENUE-SERVICE)"
+      event-service: "Active (LB: EVENT-SERVICE)"
+      booking-service: "Active (LB: BOOKING-SERVICE)"
+      payment-service: "Active (LB: PAYMENT-SERVICE)"
+      notification-service: "Active (LB: NOTIFICATION-SERVICE)"
