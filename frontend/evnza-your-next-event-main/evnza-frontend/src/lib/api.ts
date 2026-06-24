@@ -1,6 +1,6 @@
 
-
 const API_BASE_URL = "http://localhost:8080";
+const AUTH_BASE_URL = "http://localhost:8081";
 
 export interface Event {
   id: number;
@@ -86,3 +86,45 @@ export const cancelBooking = async (bookingId: number) => {
   });
   return response.text();
 };
+
+// ==========================================
+// AUTH API (talks directly to auth-service on :8081)
+// ==========================================
+
+/**
+ * Register a new user.
+ * POST /auth/register — body: { email, password }
+ * Returns a plain-text success message.
+ */
+export async function registerUser(email: string, password: string): Promise<string> {
+  const response = await fetch(`${AUTH_BASE_URL}/auth/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(text || "Registration failed");
+  }
+  return text;
+}
+
+/**
+ * Login an existing user.
+ * POST /auth/token — body: { email, password }
+ * Returns a raw JWT token string.
+ */
+export async function loginUser(email: string, password: string): Promise<string> {
+  const response = await fetch(`${AUTH_BASE_URL}/auth/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const text = await response.text();
+  if (!response.ok) {
+    throw new Error(text || "Invalid email or password");
+  }
+  return text; // JWT token
+}
